@@ -1,0 +1,26 @@
+{
+  "name": "pk-timepicker",
+  "version": "0.1.0",
+  "authors": [
+    "Peter Kaske"
+  ],
+  "description": "Simple time picker, inspired by the picker in the android stock alarm app. Build with Polymer 0.8-rc6.",
+  "license": "MIT",
+  "keywords": [
+    "polymer",
+    "web-components"
+  ],
+  "main": "pk-timepicker.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^0.8.0-rc.6",
+    "i18n-msg": "pkaske/i18n-msg#polymer-rc.4"
+  },
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^2.2.3"
+  },
+  "resolutions": {
+    "webcomponentsjs": "^0.6.0",
+    "polymer": "^0.8.0-rc.6"
+  },
+  "ignore": []
+}
