@@ -1,7 +1,7 @@
 # pk-timepicker
 
 Web component that shows a time picker like the android stop alarm watch has.
-This element requires Polymer 0.8-rc.7 for it to work!
+This element runs with Polymer ^1.0.0!
 
 ## How to use
 
