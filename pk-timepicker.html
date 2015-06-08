@@ -19,14 +19,6 @@
             margin: -10px -10px 5px -10px;
         }
 
-        #currentMonth {
-            -ms-flex: 1 1 0.000000001px;
-            -webkit-flex: 1;
-            flex: 1;
-            -webkit-flex-basis: 0.000000001px;
-            flex-basis: 0.000000001px;
-        }
-
         #clock {
             position: relative;
             height: 180px;
@@ -130,13 +122,14 @@
             background-color: #FFD67D;
         }
 
-        .clockSelection {
-            text-align: center;
-        }
-
         .clockSelection > div {
             display: inline-block;
+        }
+
+        .clockSelection > input {
+            display: inline-block;
             width: 30px;
+            border: none;
             border-bottom: solid 1px #f7f7f7;
             outline: none;
             -moz-user-modify: read-write-plaintext-only;
@@ -145,12 +138,11 @@
             overflow: hidden;
             height: 20px;
             line-height: 20px;
-            position: relative;
-            top: 5px;
             font-size: 1.2em;
+            text-align: center;
         }
 
-        .clockSelection > div:focus {
+        .clockSelection > input:focus {
             border-bottom-color: #BC5005;
         }
 
@@ -158,9 +150,9 @@
     <template>
         <div id="headerClock">
             <div class="clockSelection">
-                <div contenteditable id="hours" on-click="hourClick" on-keydown="keyDown" on-blur="validateVal">00</div>
-                <span> : </span>
-                <div contenteditable id="minutes" on-click="minuteClick" on-keydown="keyDown" on-blur="validateVal">00</div>
+                <input type="text" on-click="hourClick" id="hours" value="00" on-keydown="keyDown" on-blur="validateVal" />
+                <div> : </div>
+                <input type="text" on-click="minuteClick" id="minutes" value="00" on-keydown="keyDown" on-blur="validateVal" />
             </div>
         </div>
         <div id="clock">
@@ -261,7 +253,7 @@
 
         validateVal: function(e) {
             var target = Polymer.dom(e).localTarget;
-            var value = parseInt(target.innerHTML);
+            var value = parseInt(target.value);
 
             var max = target.getAttribute('id') == 'hours' ? (this.usePm ? 23 : 11) : 59;
 
@@ -274,16 +266,16 @@
             }
 
             if (value < 9) {
-                target.innerHTML = '0' + value;
+                target.value = '0' + value;
             } else {
-                target.innerHTML = value;
+                target.value = value;
             }
 
             this.updateValue();
         },
 
         hourClick: function(e) {
-            document.execCommand('selectAll', false, null)
+            this.$.hours.setSelectionRange(0, this.$.hours.value.length);
 
             if (!this.hasClass(this.$.minuteSelector, 'fadeOut')) {
                 Polymer.Base.toggleClass('fadeOut', true, this.$.minuteSelector);
@@ -295,7 +287,7 @@
         },
 
         minuteClick: function(e) {
-            document.execCommand('selectAll', false, null)
+            this.$.minutes.setSelectionRange(0, this.$.hours.value.length);
 
             if (!this.hasClass(this.$.hourSelector, 'fadeOut')) {
                 Polymer.Base.toggleClass('fadeOut', true, this.$.hourSelector);
@@ -330,7 +322,7 @@
                     }
 
                     Polymer.Base.toggleClass('fadeOut', true, this.$.hourSelector);
-                    this.$.hours.innerHTML = hours;
+                    this.$.hours.value = hours;
 
                     setTimeout(function() {
                         Polymer.Base.toggleClass('fadeOut', false, this.$.minuteSelector);
@@ -348,7 +340,7 @@
                         minutes = '0' + minutes;
                     }
 
-                    this.$.minutes.innerHTML = minutes;
+                    this.$.minutes.value = minutes;
 
                     this.updateValue();
                 }
@@ -399,7 +391,7 @@
         },
 
         updateValue: function() {
-            var val = this.$.hours.innerHTML + ':' + this.$.minutes.innerHTML;
+            var val = this.$.hours.value + ':' + this.$.minutes.value;
 
             if (!this.usePm) {
                 if (this.hasClass(this.$.am, 'selected')) {
