@@ -1,6 +1,6 @@
 {
   "name": "pk-timepicker",
-  "version": "1.0.2",
+  "version": "1.1.2",
   "authors": [
     "Peter Kaske"
   ],
@@ -14,7 +14,8 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^1.0.0",
     "i18n-msg": "pkaske/i18n-msg#^1.0.0",
-    "iron-input": "PolymerElements/iron-input#^1.0.0"
+    "iron-input": "PolymerElements/iron-input#^1.0.0",
+    "fa-awesome": "^1.2.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^3.1.0"

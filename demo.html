@@ -10,8 +10,8 @@
 <body>
     <h3>Standard with a 12 hours based interface.</h3>
     <pk-timepicker id="picker1"></pk-timepicker>
-    <h3>Uses 'use-pm' to display 24 hours based interface.</h3>
-    <pk-timepicker id="picker2" use-pm></pk-timepicker>
+    <h3>Uses 'use-pm' to display 24 hours based interface and 'use-save' to only trigger the 'value-changed' event after a the check icon was clicked.</h3>
+    <pk-timepicker id="picker2" use-pm use-save></pk-timepicker>
 
     <p>The components fires a 'value-changed' event. The 'event.detail' property holds the time string.</p>
     <p>

@@ -1,6 +1,7 @@
 <!-- Import Polymer -->
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../i18n-msg/i18n-msg.html">
+<link rel="import" href="../fa-awesome/fa-awesome.html">
 
 <dom-module id="pk-timepicker">
     <style>
@@ -22,6 +23,27 @@
         #clock {
             position: relative;
             height: 180px;
+        }
+
+        fa-awesome {
+            display: none;
+            cursor: pointer;
+        }
+
+        fa-awesome[use-save] {
+            position: absolute;
+            display: inline-block;
+            top: 24%;
+            left: 44%;
+            z-index: 1;
+        }
+
+        fa-awesome[use-save][use-pm] {
+            top: 47%;
+        }
+
+        fa-awesome[use-save]:hover {
+            color: #BC5005;
         }
 
         #ampm {
@@ -150,9 +172,9 @@
     <template>
         <div id="headerClock">
             <div class="clockSelection">
-                <input type="text" on-click="hourClick" id="hours" value="00" on-keydown="keyDown" on-blur="validateVal" />
+                <input type="text" on-tap="hourClick" id="hours" value="00" on-keydown="keyDown" on-blur="validateVal" />
                 <div> : </div>
-                <input type="text" on-click="minuteClick" id="minutes" value="00" on-keydown="keyDown" on-blur="validateVal" />
+                <input type="text" on-tap="minuteClick" id="minutes" value="00" on-keydown="keyDown" on-blur="validateVal" />
             </div>
         </div>
         <div id="clock">
@@ -198,9 +220,10 @@
             </div>
             <div id="ampm" use-pm$="[[usePm]]">
                 <div>
-                    <span id="am" on-click="switchAmPm" class="selected">AM</span><span on-click="switchAmPm" id="pm">PM</span>
+                    <span id="am" on-tap="switchAmPm" class="selected">AM</span><span on-tap="switchAmPm" id="pm">PM</span>
                 </div>
             </div>
+            <fa-awesome icon="check" on-tap="triggerChanged" use-save$="[[useSave]]" use-pm$="[[usePm]]" size="lg"></fa-awesome>
         </div>
     </template>
 </dom-module>
@@ -210,6 +233,10 @@
         is: 'pk-timepicker',
 
         properties: {
+            useSave: {
+                type: Boolean,
+                value: false
+            },
             usePm: {
                 type: Boolean,
                 value: false,
@@ -230,6 +257,10 @@
 
         usePmChanged: function() {
             this.genClock();
+        },
+
+        triggerChanged: function() {
+            this.updateValue();
         },
 
         keyDown: function(e) {
@@ -271,7 +302,9 @@
                 target.value = value;
             }
 
-            this.updateValue();
+            if (!this.useSave) {
+                this.updateValue();
+            }
         },
 
         hourClick: function(e) {
@@ -309,7 +342,9 @@
                 this.toggleClass('selected', false, this.$.am);
             }
 
-            this.updateValue();
+            if (!this.useSave) {
+                this.updateValue();
+            }
         },
 
         registerEventsClock: function() {
@@ -328,7 +363,9 @@
                         Polymer.Base.toggleClass('fadeOut', false, this.$.minuteSelector);
                     }.bind(this), 100);
 
-                    this.updateValue();
+                    if (!this.useSave) {
+                        this.updateValue();
+                    }
                 }
             }.bind(this));
 
@@ -342,7 +379,9 @@
 
                     this.$.minutes.value = minutes;
 
-                    this.updateValue();
+                    if (!this.useSave) {
+                        this.updateValue();
+                    }
                 }
             }.bind(this));
         },
