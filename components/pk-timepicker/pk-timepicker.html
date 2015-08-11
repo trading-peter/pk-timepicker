@@ -1,0 +1,520 @@
+<!--
+@license
+Copyright (c) 2015 Peter Kaske <p.kaske@gmail.com>. All rights reserved.
+This code may only be used under the MIT license found at http://opensource.org/licenses/MIT.
+Or see the LICENSE file that comes with this code.
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../fa-awesome/fa-awesome.html">
+
+<!--
+Shows a clock shaped GUI to select a time.
+
+@group GUI Elements
+@element pk-timepicker
+@demo demo/index.html
+@homepage http://pkaske.github.io/pk-timepicker
+-->
+
+<dom-module id="pk-timepicker">
+  <style>
+    :host {
+      display: block;
+      width: 180px;
+      height: 220px;
+      padding: 10px;
+      font-family: "Arial Narrow", Arial, Helvetica, sans-serif;
+    }
+
+    #headerClock {
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      margin: -10px -10px 5px -10px;
+    }
+
+    #clock {
+      position: relative;
+      height: 180px;
+    }
+
+    .set-btn {
+      display: none;
+      cursor: pointer;
+    }
+
+    .set-btn[use-save] {
+      position: absolute;
+      display: inline-block;
+      top: 30%;
+      left: 44%;
+      z-index: 1;
+    }
+
+    .set-btn[use-save][use-pm] {
+      top: 47%;
+    }
+
+    .set-btn[use-save]:hover {
+      color: #BC5005;
+    }
+
+    #ampm {
+      position: absolute;
+      top: 44%;
+      left: 50px;
+      z-index: 1;
+    }
+
+    :host([use-save]) #ampm {
+      top: 57%;
+    }
+
+    #ampm[use-pm] {
+      display: none;
+    }
+
+    #ampm > div > span:last-child {
+      display: inline-block;
+      margin-left: 20px;
+    }
+
+    #ampm span {
+      padding: 3px 5px;
+      cursor: pointer;
+    }
+
+    #ampm span.selected {
+      background-color: #BC5005;
+      color: #ffffff;
+      border-radius: 2px;
+      ;
+    }
+
+    #hourSelector,
+    #minuteSelector {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      -webkit-transition: all 0.1s linear;
+      -moz-transition: all 0.1s linear;
+      -ms-transition: all 0.1s linear;
+      -o-transition: all 0.1s linear;
+      transition: all 0.1s linear;
+      z-index: 1;
+    }
+
+    #hourSelector[use-pm] {
+      top: 5px;
+      left: 3px;
+    }
+
+    #hourSelector.fadeOut,
+    #minuteSelector.fadeOut {
+      opacity: 0;
+      transform: scale(1.1);
+      z-index: -1;
+    }
+
+    #hourSelector > div.am,
+    #hourSelector > div.pm,
+    #minuteSelector > div {
+      position: absolute;
+      border-radius: 50%;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    #hourSelector > div.am {
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+    }
+
+    #hourSelector[use-pm] > div.am {
+      font-size: 0.9em;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+    }
+
+    #hourSelector > div.pm {
+      display: none;
+    }
+
+    #hourSelector[use-pm] > div.pm {
+      display: block;
+      font-size: 0.8em;
+      width: 25px;
+      height: 25px;
+      line-height: 25px;
+    }
+
+    #minuteSelector > div {
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+    }
+
+    #hourSelector > div.am:hover,
+    #hourSelector > div.pm:hover,
+    #minuteSelector > div:hover {
+      background-color: #FFD67D;
+    }
+
+    .clockSelection > div {
+      display: inline-block;
+    }
+
+    .clockSelection > input {
+      display: inline-block;
+      width: 30px;
+      border: none;
+      border-bottom: solid 1px #f7f7f7;
+      outline: none;
+      -moz-user-modify: read-write-plaintext-only;
+      -webkit-user-modify: read-write-plaintext-only;
+      white-space: nowrap;
+      overflow: hidden;
+      height: 20px;
+      line-height: 20px;
+      font-size: 1.2em;
+      text-align: center;
+    }
+
+    .clockSelection > input:focus {
+      border-bottom-color: #BC5005;
+    }
+  </style>
+  <template>
+    <div id="headerClock">
+      <div class="clockSelection">
+        <input type="text" on-tap="_hourClick" id="hours" value="00" on-keyDown="_keyDown" on-blur="_validateVal" />
+        <div> : </div>
+        <input type="text" on-tap="_minuteClick" id="minutes" value="00" on-keyDown="_keyDown" on-blur="_validateVal" />
+      </div>
+    </div>
+    <div id="clock">
+      <div id="hourSelector" use-pm$="[[usePm]]">
+        <div class="pm">15</div>
+        <div class="pm">16</div>
+        <div class="pm">17</div>
+        <div class="pm">18</div>
+        <div class="pm">19</div>
+        <div class="pm">20</div>
+        <div class="pm">21</div>
+        <div class="pm">22</div>
+        <div class="pm">23</div>
+        <div class="pm">00</div>
+        <div class="pm">13</div>
+        <div class="pm">14</div>
+        <div class="am">3</div>
+        <div class="am">4</div>
+        <div class="am">5</div>
+        <div class="am">6</div>
+        <div class="am">7</div>
+        <div class="am">8</div>
+        <div class="am">9</div>
+        <div class="am">10</div>
+        <div class="am">11</div>
+        <div class="am">12</div>
+        <div class="am">1</div>
+        <div class="am">2</div>
+      </div>
+      <div id="minuteSelector" class="fadeOut">
+        <div>15</div>
+        <div>20</div>
+        <div>25</div>
+        <div>30</div>
+        <div>35</div>
+        <div>40</div>
+        <div>45</div>
+        <div>50</div>
+        <div>55</div>
+        <div>00</div>
+        <div>05</div>
+        <div>10</div>
+      </div>
+      <div id="ampm" use-pm$="[[usePm]]">
+        <div>
+          <span id="am" on-tap="_switchAmPm" class="selected">AM</span>
+          <span on-tap="_switchAmPm" id="pm">PM</span>
+        </div>
+      </div>
+      <div class="set-btn" on-tap="_triggerChanged" use-save$="[[useSave]]" use-pm$="[[usePm]]">
+        <content select="[set-value-trigger]"></content>
+      </div>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'pk-timepicker',
+
+    properties: {
+
+      /**
+       * If `true', the element will update it's value (and fire a `value-changed` event)
+       * only if the `set-value-trigger` was tapped.
+       */
+      useSave: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * If `true`, the element will operate in 24 hours GUI mode.
+       */
+      usePm: {
+        type: Boolean,
+        value: false,
+        observer: '_usePmChanged'
+      },
+
+      /**
+       * The current time value. Use the 12h (`01:10 pm`) or 24h (`13:10`) format.
+       * Be careful when setting the value at initialization time,
+       * the element excepts to get the correct (time-)format.
+       */
+      value: {
+        type: String,
+        notify: true,
+        observer: '_valueChanged'
+      }
+    },
+
+    ready: function() {
+      this.radius = 90;
+      this._registerEventsClock();
+      this._genClock();
+    },
+
+    _usePmChanged: function() {
+      this._genClock();
+    },
+
+    _triggerChanged: function() {
+      this._updateValue();
+    },
+
+    _keyDown: function(e) {
+      if (!e.keyCode || e.keyCode != 13) {
+        return;
+      }
+
+      Polymer.dom(e).localTarget.blur();
+      e.preventDefault();
+
+      try {
+        document.selection.empty();
+      } catch (ex) {}
+
+      try {
+        window.getSelection().removeAllRanges();
+      } catch (ex) {}
+
+      return false;
+    },
+
+    _validateVal: function(e) {
+      var target = Polymer.dom(e).localTarget;
+      var value = parseInt(target.value);
+
+      var max = target.getAttribute('id') == 'hours' ? (this.usePm ? 23 : 11) : 59;
+
+      target.value = this._validateTime(value, max);
+
+      if (!this.useSave) {
+        this._updateValue();
+      }
+    },
+
+    _validateTime: function(value, max) {
+      if (isNaN(value) || value < 0) {
+        value = 0;
+      }
+
+      if (value > max) {
+        value = max;
+      }
+
+      if (value <= 9) {
+        value = '0' + value;
+      }
+
+      return value;
+    },
+
+    _hourClick: function(e) {
+      this.$.hours.setSelectionRange(0, this.$.hours.value.length);
+
+      if (!Polymer.dom(this.$.minuteSelector).classList.contains('fadeOut')) {
+        this.toggleClass('fadeOut', true, this.$.minuteSelector);
+
+        this.async(function() {
+          this.toggleClass('fadeOut', false, this.$.hourSelector);
+        }.bind(this), 100);
+      }
+    },
+
+    _minuteClick: function(e) {
+      this.$.minutes.setSelectionRange(0, this.$.hours.value.length);
+
+      if (!Polymer.dom(this.$.minuteSelector).classList.contains('fadeOut')) {
+        this.toggleClass('fadeOut', true, this.$.hourSelector);
+
+        this.async(function() {
+          this.toggleClass('fadeOut', false, this.$.minuteSelector);
+        }, 100);
+      }
+    },
+
+    _switchAmPm: function(e) {
+      var target = Polymer.dom(e).localTarget;
+
+      if (target.getAttribute('id') == 'am') {
+        this.toggleClass('selected', true, this.$.am);
+        this.toggleClass('selected', false, this.$.pm);
+      } else {
+        this.toggleClass('selected', true, this.$.pm);
+        this.toggleClass('selected', false, this.$.am);
+      }
+
+      if (!this.useSave) {
+        this._updateValue();
+      }
+    },
+
+    _registerEventsClock: function() {
+      this.$.hourSelector.addEventListener('click', function(e) {
+        if (e.target && e.target.nodeName == 'DIV' && (Polymer.dom(e.target).classList.contains('am') || (Polymer.dom(e.target).classList.contains('pm')))) {
+          var hours = e.target.innerHTML;
+
+          if (hours.length == 1) {
+            hours = '0' + hours;
+          }
+
+          this.toggleClass('fadeOut', true, this.$.hourSelector);
+          this.$.hours.value = hours;
+
+          this.async(function() {
+            this.toggleClass('fadeOut', false, this.$.minuteSelector);
+          }, 100);
+
+          if (!this.useSave) {
+            this._updateValue();
+          }
+        }
+      }.bind(this));
+
+      this.$.minuteSelector.addEventListener('click', function(e) {
+        if (e.target && e.target.nodeName == 'DIV' && e.target != this.$.minuteSelector) {
+          var minutes = e.target.innerHTML;
+
+          if (minutes.length == 1) {
+            minutes = '0' + minutes;
+          }
+
+          this.$.minutes.value = minutes;
+
+          if (!this.useSave) {
+            this._updateValue();
+          }
+        }
+      }.bind(this));
+    },
+
+    _genClock: function() {
+      var items;
+
+      if (this.usePm) {
+        items = Polymer.dom(this.$.hourSelector).querySelectorAll('div');
+      } else {
+        items = Polymer.dom(this.$.hourSelector).querySelectorAll('div.am');
+      }
+
+      this._genCircle(items, this.radius - 15);
+
+      items = Polymer.dom(this.$.minuteSelector).querySelectorAll('div');
+      this._genCircle(items, this.radius - 15);
+    },
+
+    _genCircle: function(items, radius) {
+      var oX = radius;
+      var oY = radius;
+      var offX = 0,
+        offY = 0,
+        radians = 0;
+      var x, y;
+
+      for (var i = 0, li = items.length; i < li; ++i) {
+
+        if (i == 12) {
+          radius -= 28;
+          oX = oY = radius;
+          offX = offY = 25;
+          radians = 0;
+        }
+
+        x = oX + offX + (Math.cos(radians) * radius);
+        y = oY + offY + (Math.sin(radians) * radius);
+
+        items[i].style.left = x + 'px';
+        items[i].style.top = y + 'px';
+        radians += 0.523598776;
+      }
+    },
+
+    /**
+     * Used to set a value via attribute.
+     * @param  {String} newValue New time to set.
+     * @return {void}
+     */
+    _valueChanged: function(newValue) {
+      if (typeof newValue == 'string') {
+        var parts = newValue.replace(/ (am|pm)/, '').split(':');
+        var hour = this._validateTime(parseInt(parts[0], 10), this.usePm ? 23 : 11);
+        var minute = this._validateTime(parseInt(parts[1], 10), 59);
+        var suffix = '';
+
+        if (!this.usePm) {
+          if (newValue.indexOf('pm') != -1) {
+            Polymer.dom(this.$.pm).classList.add('selected');
+            Polymer.dom(this.$.am).classList.remove('selected');
+            suffix = ' pm';
+          } else {
+            Polymer.dom(this.$.am).classList.add('selected');
+            Polymer.dom(this.$.pm).classList.remove('selected');
+            suffix = ' am';
+          }
+        }
+
+        this.$.hours.value = hour;
+        this.$.minutes.value = minute;
+        this.value = hour + ':' + minute + suffix;
+      }
+    },
+
+    _updateValue: function() {
+      // Prepare value after interaction with control itself.
+      var val = this.$.hours.value + ':' + this.$.minutes.value;
+
+      if (!this.usePm) {
+        if (Polymer.dom(this.$.am).classList.contains('selected')) {
+          val += ' am';
+        } else {
+          val += ' pm';
+        }
+      }
+
+      if (this.value == val) {
+        // Trigger the event manually if the value isn't realy changing.
+        this.fire('value-changed', { value: val });
+      }
+
+      this.value = val;
+    }
+  });
+</script>

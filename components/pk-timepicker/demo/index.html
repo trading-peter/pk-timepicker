@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+  <script>
+    window.Polymer = window.Polymer || {};
+    window.Polymer.dom = 'shadow';
+  </script>
+  <link rel="import" href="../pk-timepicker.html">
+  <link rel="import" href="../../fa-awesome/fa-awesome.html">
+</head>
+
+<body>
+  <h3>Standard with a 12 hours based interface.</h3>
+  <pk-timepicker id="picker1" value="3:05"></pk-timepicker>
+  <h3>Uses 'use-pm' to display 24 hours based interface and 'use-save' to only trigger the 'value-changed' event after a the check icon was clicked.</h3>
+  <pk-timepicker id="picker2" value="14:21" use-pm use-save>
+    <fa-awesome set-value-trigger icon="fa:check"></fa-awesome>
+  </pk-timepicker>
+
+  <p>The components fires a 'value-changed' event. The 'event.detail' property holds the time string.</p>
+  <p>
+    Selected time of picker 1:
+    <input type="text" name="" id="pickerVal1" />
+  </p>
+  <p>
+    Selected time of picker 2:
+    <input type="text" name="" id="pickerVal2" />
+  </p>
+  <script type="text/javascript">
+    var picker1 = document.getElementById('picker1');
+    var picker2 = document.getElementById('picker2');
+    var pickerVal1 = document.getElementById('pickerVal1');
+    var pickerVal2 = document.getElementById('pickerVal2');
+
+    picker1.addEventListener('value-changed', function(e) {
+      pickerVal1.value = e.detail.value;
+    });
+
+    picker2.addEventListener('value-changed', function(e) {
+      pickerVal2.value = e.detail.value;
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+:host {
+    display: inline-block;
+}
+
+:host[animated] {
+    display: none;
+}
+
+#label {
+    padding-left: 5px;
+}
+
+#label.hide {
+    display: none;
+}
+
+#wrap {
+    @apply(--layout-horizontal);
+    @apply(--layout-center);
+}
+
+#wrap.reverse {
+    @apply(--layout-horizontal-reverse);
+}
+
+#wrap.reverse #label {
+    padding-left: 0;
+    padding-right: 5px;
+}

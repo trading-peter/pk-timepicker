@@ -1,0 +1,22 @@
+{
+  "name": "pk-timepicker",
+  "version": "1.2.0",
+  "authors": [
+    "Peter Kaske"
+  ],
+  "description": "Simple time picker, inspired by the picker in the android stock alarm app. Build with Polymer.",
+  "license": "MIT",
+  "keywords": [
+    "polymer",
+    "web-components"
+  ],
+  "main": "pk-timepicker.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "fa-awesome": "^2.0.0",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0"
+  },
+  "ignore": []
+}
