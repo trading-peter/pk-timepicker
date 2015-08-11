@@ -289,6 +289,14 @@ Shows a clock shaped GUI to select a time.
       this.radius = 90;
       this._registerEventsClock();
       this._genClock();
+
+      if (!this.value) {
+        var now = new Date();
+        var h = !this.usePm ? now.getHours() % 12 : now.getHours();
+        var m = now.getMinutes();
+        var suffix = !this.usePm && now.getHours() > 11 ? ' pm' : ' am';
+        this.value = h + ':' + m + suffix;
+      }
     },
 
     _usePmChanged: function() {
