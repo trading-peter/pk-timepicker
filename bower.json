@@ -1,6 +1,6 @@
 {
   "name": "pk-timepicker",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "authors": [
     "Peter Kaske"
   ],
@@ -12,10 +12,10 @@
   ],
   "main": "pk-timepicker.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.0.0"
+    "polymer": "Polymer/polymer#^1.0.0",
+    "fa-awesome": "^2.0.0"
   },
   "devDependencies": {
-    "fa-awesome": "^2.0.0",
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0"
   },
   "ignore": []
